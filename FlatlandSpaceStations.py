@@ -1,30 +1,27 @@
-import math
-
 
 def maxDistSpaceStation(n: int, m: int, spaceStations: list)->int:
     if n == m:
         return 0
+    maxMidSeg = 0
+    curr = -1
+    for ss in spaceStations:
+        seg = ss - curr - 1
+        if curr == -1:
+            firstSeg = seg
+        curr = ss
+        maxMidSeg = max(maxMidSeg, seg)
+    maxMidDist = (maxMidSeg + 1) // 2
 
-    maxInterval = 0
-    curr = 0
-    while curr != n-1:
-        for stationIndex in spaceStations:
-            interval = math.floor(abs(stationIndex-curr)/2 + 1)
-            curr = stationIndex
-            if interval > maxInterval:
-                maxInterval = interval
+    lastSeg = n - curr - 1
 
-        curr = n-1
-        lastInterval = math.floor(abs(curr - spaceStations[m-1])/2 + 1)
-        if lastInterval > maxInterval:
-            maxInterval = lastInterval
+    maxDist = max(firstSeg, maxMidDist, lastSeg)
 
-    return maxInterval//2 + 1
+    return maxDist
 
 
 n, m = map(int, input().split())
 spaceStations = list(map(int, input().split()))
 
-sorted(spaceStations)
+spaceStations.sort()
 
 print(maxDistSpaceStation(n, m, spaceStations))
